@@ -1,0 +1,118 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
+#include <zephyr/dt-bindings/pinctrl/esp-pinctrl-common.h>
+#include <dt-bindings/pinctrl/esp32s3-pinctrl.h>
+#include <zephyr/dt-bindings/pinctrl/esp32s3-gpio-sigmap.h>
+
+/* N16R8 exposes GPIO0-21 and GPIO38-48; reserve pads not available as GPIO. */
+&gpio0 {
+    gpio-reserved-ranges = <22 10>;
+};
+&gpio1 {
+    gpio-reserved-ranges = <0 6>, <17 5>;
+};
+
+/* The module has 8 MB OPI PSRAM, but the application does not need external RAM. */
+&flash0 {
+    reg = <0x0 0x01000000>;
+};
+&psram0 {
+    size = <0x00800000>;
+    status = "disabled";
+};
+
+&spi2 {
+    status = "okay";
+    pinctrl-0 = <&spi2_reserved_pins>;
+    pinctrl-names = "default";
+    cs-gpios = <&gpio0 10 GPIO_ACTIVE_LOW>;
+    #address-cells = <1>;
+    #size-cells = <0>;
+};
+&spi3 { status = "disabled"; };
+&esp32_bt_hci { status = "disabled"; };
+
+/ {
+    chosen {
+        zephyr,display = &sh1106;
+    };
+
+    /* Provisional active-low IRQ placeholder; confirm polarity for the future SPI peripheral. */
+    spi_device_irq: spi-device-irq {
+        gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+    };
+};
+
+&i2c0 {
+    status = "okay";
+
+    sh1106: sh1106@3c {
+        compatible = "sinowealth,sh1106";
+        reg = <0x3c>;
+        width = <128>;
+        height = <64>;
+        segment-offset = <2>;
+        page-offset = <0>;
+        display-offset = <0>;
+        multiplex-ratio = <63>;
+        segment-remap;
+        com-invdir;
+        prechargep = <0x22>;
+    };
+};
+
+&pinctrl {
+    spi2_reserved_pins: spi2_reserved_pins {
+        group1 {
+            pinmux = <SPIM2_MISO_GPIO13>,
+                     <SPIM2_SCLK_GPIO12>;
+        };
+        group2 {
+            pinmux = <SPIM2_MOSI_GPIO11>;
+            output-low;
+        };
+        group3 {
+            pinmux = <ESP32_PINMUX(10, ESP_NOSIG, ESP_NOSIG)>;
+            output-high;
+        };
+        group4 {
+            pinmux = <ESP32_PINMUX(14, ESP_NOSIG, ESP_NOSIG)>;
+            input-enable;
+        };
+    };
+};
+
+/ {
+    valves {
+        valve1: valve1 {
+            compatible = "valve-controller";
+            open-limit-gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
+            closed-limit-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
+        };
+        valve2: valve2 {
+            compatible = "valve-controller";
+            open-limit-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+            closed-limit-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
+        };
+        valve3: valve3 {
+            compatible = "valve-controller";
+            open-limit-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+            closed-limit-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
+        };
+        valve4: valve4 {
+            compatible = "valve-controller";
+            open-limit-gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
+            closed-limit-gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
+        };
+    };
+};
+
+&ledc0 {
+    status = "okay";
+    #address-cells = <1>;
+    #size-cells = <0>;
+    channel0@0 { reg = <0>; timer = <0>; };
+    channel1@1 { reg = <1>; timer = <0>; };
+    channel2@2 { reg = <2>; timer = <0>; };
+    channel3@3 { reg = <3>; timer = <0>; };
+};

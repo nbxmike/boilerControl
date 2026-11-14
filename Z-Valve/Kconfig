@@ -1,0 +1,53 @@
+mainmenu "ESP32 four-valve controller"
+
+source "Kconfig.zephyr"
+
+config APP_MOTOR_CONTROLLER
+	string "Motor controller model"
+	default "BTS7960"
+	help
+	  Select the motor controller used by all four valves. Set this in
+	  local.conf to one of: BTS7960, VICTOR_SPX, TALON_SRX, JAGUAR_GREY,
+	  VICTOR_888, or VICTOR_884.
+
+menu "Valve network configuration"
+
+config APP_WIFI_SSID
+	string "Wi-Fi SSID"
+	default ""
+
+config APP_WIFI_PASSWORD
+	string "Wi-Fi WPA2 password (empty for an open network)"
+	default ""
+
+config APP_MQTT_HOST
+	string "MQTT broker IPv4 address or hostname"
+	default ""
+
+config APP_MQTT_PORT
+	int "MQTT TCP port"
+	range 1 65535
+	default 1883
+
+config APP_MQTT_AUTH
+	bool "Use MQTT username and password"
+
+config APP_MQTT_USERNAME
+	string "MQTT username"
+	depends on APP_MQTT_AUTH
+	default ""
+
+config APP_MQTT_PASSWORD
+	string "MQTT password"
+	depends on APP_MQTT_AUTH
+	default ""
+
+config APP_MQTT_CLIENT_ID
+	string "Unique MQTT client ID"
+	default "heater-valves"
+
+config APP_MQTT_ROOT
+	string "MQTT root topic (no wildcards or trailing slash)"
+	default "heater-valves"
+
+endmenu

@@ -1,0 +1,46 @@
+cmake_minimum_required(VERSION 3.20.0)
+
+set(SUPPORTED_MOTOR_CONTROLLERS BTS7960 VICTOR_SPX TALON_SRX JAGUAR_GREY VICTOR_888 VICTOR_884)
+set(MOTOR_CONTROLLER "BTS7960")
+if(NOT BOARD)
+  set(BOARD esp32s3_devkitc/esp32s3/procpu)
+endif()
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/local.conf")
+  set(LOCAL_CONF_FILE "${CMAKE_CURRENT_SOURCE_DIR}/local.conf")
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${LOCAL_CONF_FILE}")
+  file(STRINGS "${LOCAL_CONF_FILE}" MOTOR_CONTROLLER_CONFIG
+    REGEX "^CONFIG_APP_MOTOR_CONTROLLER=")
+  list(LENGTH MOTOR_CONTROLLER_CONFIG MOTOR_CONTROLLER_CONFIG_COUNT)
+  if(MOTOR_CONTROLLER_CONFIG_COUNT GREATER 1)
+    message(FATAL_ERROR "local.conf must set CONFIG_APP_MOTOR_CONTROLLER at most once")
+  elseif(MOTOR_CONTROLLER_CONFIG_COUNT EQUAL 1)
+    list(GET MOTOR_CONTROLLER_CONFIG 0 MOTOR_CONTROLLER_CONFIG_LINE)
+    if(NOT MOTOR_CONTROLLER_CONFIG_LINE MATCHES
+        "^CONFIG_APP_MOTOR_CONTROLLER=\"([A-Z0-9_]+)\"$")
+      message(FATAL_ERROR
+        "Set CONFIG_APP_MOTOR_CONTROLLER in local.conf to one quoted supported controller name")
+    endif()
+    set(MOTOR_CONTROLLER "${CMAKE_MATCH_1}")
+  endif()
+  list(APPEND EXTRA_CONF_FILE "${CMAKE_CURRENT_SOURCE_DIR}/local.conf")
+endif()
+if(NOT MOTOR_CONTROLLER IN_LIST SUPPORTED_MOTOR_CONTROLLERS)
+  message(FATAL_ERROR
+    "Unsupported CONFIG_APP_MOTOR_CONTROLLER='${MOTOR_CONTROLLER}'. Choose one of: ${SUPPORTED_MOTOR_CONTROLLERS}")
+endif()
+
+if(MOTOR_CONTROLLER STREQUAL "BTS7960")
+  set(DTC_OVERLAY_FILE "${CMAKE_CURRENT_SOURCE_DIR}/boards/bts7960.overlay")
+else()
+  set(DTC_OVERLAY_FILE "${CMAKE_CURRENT_SOURCE_DIR}/boards/frc_pwm.overlay")
+endif()
+
+find_package(Zephyr 4.5.0 EXACT REQUIRED HINTS $ENV{ZEPHYR_BASE})
+project(z_valve LANGUAGES C CXX)
+target_include_directories(app PRIVATE include)
+target_compile_definitions(app PRIVATE MOTOR_CONTROLLER=MOTOR_CONTROLLER_${MOTOR_CONTROLLER})
+target_sources(app PRIVATE
+  src/main.cpp
+  src/valve_hardware.cpp
+  src/network.cpp
+  src/status_display.cpp)

@@ -1,0 +1,4 @@
+/build*/
+/local.conf
+/.venv/
+/.west/

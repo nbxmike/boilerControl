@@ -1,0 +1,62 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Zephyr: Build",
+            "type": "process",
+            "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+            "args": [
+                "-m",
+                "west",
+                "build",
+                "-p",
+                "auto",
+                "-b",
+                "esp32s3_devkitc/esp32s3/procpu",
+                "-d",
+                "build",
+                "."
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "ZEPHYR_BASE": "${workspaceFolder}\\..\\zephyr",
+                    "ZEPHYR_TOOLCHAIN_VARIANT": "zephyr",
+                    "ZEPHYR_SDK_INSTALL_DIR": "${env:USERPROFILE}\\zephyr-sdk-1.0.1",
+                    "PATH": "${workspaceFolder}\\.venv\\Scripts;${env:LOCALAPPDATA}\\Microsoft\\WinGet\\Packages\\oss-winget.dtc_Microsoft.Winget.Source_8wekyb3d8bbwe\\usr\\bin;C:\\Program Files\\7-Zip;${env:PATH}"
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Zephyr: Build (external workspace)",
+            "type": "process",
+            "command": "pwsh.exe",
+            "args": [
+                "-NoProfile",
+                "-Command",
+                "$ErrorActionPreference = 'Stop'; $Python = Join-Path $env:USERPROFILE 'zephyrproject\\.venv\\Scripts\\python.exe'; $Top = & $Python -m west topdir; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; if ((Resolve-Path $Top).Path -ne (Resolve-Path (Join-Path $env:USERPROFILE 'zephyrproject')).Path) { throw \"Wrong west workspace: $Top\" }; & $Python -m west build -p auto -b esp32s3_devkitc/esp32s3/procpu -d (Join-Path $env:ZVALVE_APP 'build-external') $env:ZVALVE_APP -- \"-DDTC=$env:LOCALAPPDATA\\Microsoft\\WinGet\\Packages\\oss-winget.dtc_Microsoft.Winget.Source_8wekyb3d8bbwe\\usr\\bin\\dtc.exe\"; exit $LASTEXITCODE"
+            ],
+            "options": {
+                "cwd": "${env:USERPROFILE}\\zephyrproject",
+                "env": {
+                    "ZVALVE_APP": "${workspaceFolder}",
+                    "ZEPHYR_BASE": "${env:USERPROFILE}\\zephyrproject\\zephyr",
+                    "ZEPHYR_TOOLCHAIN_VARIANT": "zephyr",
+                    "ZEPHYR_SDK_INSTALL_DIR": "${env:USERPROFILE}\\zephyr-sdk-1.0.1",
+                    "PATH": "${env:USERPROFILE}\\zephyrproject\\.venv\\Scripts;${env:LOCALAPPDATA}\\Microsoft\\WinGet\\Packages\\oss-winget.dtc_Microsoft.Winget.Source_8wekyb3d8bbwe\\usr\\bin;C:\\Program Files\\7-Zip;${env:PATH}"
+                }
+            },
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}

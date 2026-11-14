@@ -1,0 +1,43 @@
+{
+    "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+    "python.terminal.activateEnvironment": false,
+    "terminal.integrated.profiles.windows": {
+        "Zephyr (PowerShell)": {
+            "path": "pwsh.exe",
+            "args": [
+                "-NoProfile",
+                "-NoExit",
+                "-Command",
+                "& '${workspaceFolder}\\.venv\\Scripts\\Activate.ps1'"
+            ]
+        },
+        "Zephyr External (PowerShell)": {
+            "path": "pwsh.exe",
+            "args": [
+                "-NoProfile",
+                "-NoExit",
+                "-Command",
+                "$ErrorActionPreference = 'Stop'; $ZephyrWorkspace = Join-Path $env:USERPROFILE 'zephyrproject'; $App = '${workspaceFolder}'; $Python = Join-Path $ZephyrWorkspace '.venv\\Scripts\\python.exe'; $Dtc = Join-Path $env:LOCALAPPDATA 'Microsoft\\WinGet\\Packages\\oss-winget.dtc_Microsoft.Winget.Source_8wekyb3d8bbwe\\usr\\bin\\dtc.exe'; & (Join-Path $ZephyrWorkspace '.venv\\Scripts\\Activate.ps1'); $env:ZEPHYR_BASE = Join-Path $ZephyrWorkspace 'zephyr'; $env:ZEPHYR_TOOLCHAIN_VARIANT = 'zephyr'; $env:ZEPHYR_SDK_INSTALL_DIR = Join-Path $env:USERPROFILE 'zephyr-sdk-1.0.1'; Set-Location $ZephyrWorkspace"
+            ]
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "Zephyr (PowerShell)",
+    "terminal.integrated.env.windows": {
+        "ZEPHYR_BASE": "${workspaceFolder}\\..\\zephyr",
+        "ZEPHYR_TOOLCHAIN_VARIANT": "zephyr",
+        "ZEPHYR_SDK_INSTALL_DIR": "${env:USERPROFILE}\\zephyr-sdk-1.0.1",
+        "PATH": "${workspaceFolder}\\.venv\\Scripts;${env:LOCALAPPDATA}\\Microsoft\\WinGet\\Packages\\oss-winget.dtc_Microsoft.Winget.Source_8wekyb3d8bbwe\\usr\\bin;C:\\Program Files\\7-Zip;${env:PATH}"
+    },
+    "cmake.configureOnOpen": false,
+    "cmake.configureArgs": [
+        "-DBOARD=esp32s3_devkitc/esp32s3/procpu",
+        "-DDTC:FILEPATH=${env:LOCALAPPDATA}\\Microsoft\\WinGet\\Packages\\oss-winget.dtc_Microsoft.Winget.Source_8wekyb3d8bbwe\\usr\\bin\\dtc.exe",
+        "-DWEST_PYTHON=${workspaceFolder}\\.venv\\Scripts\\python.exe"
+    ],
+    "cmake.configureEnvironment": {
+        "ZEPHYR_BASE": "${workspaceFolder}\\..\\zephyr",
+        "ZEPHYR_TOOLCHAIN_VARIANT": "zephyr",
+        "ZEPHYR_SDK_INSTALL_DIR": "${env:USERPROFILE}\\zephyr-sdk-1.0.1",
+        "PATH": "${workspaceFolder}\\.venv\\Scripts;${env:LOCALAPPDATA}\\Microsoft\\WinGet\\Packages\\oss-winget.dtc_Microsoft.Winget.Source_8wekyb3d8bbwe\\usr\\bin;C:\\Program Files\\7-Zip;${env:PATH}"
+    }
+}

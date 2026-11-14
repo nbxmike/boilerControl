@@ -1,0 +1,16 @@
+manifest:
+  version: "0.13"
+  remotes:
+    - name: zephyrproject
+      url-base: https://github.com/zephyrproject-rtos
+  projects:
+    - name: zephyr
+      remote: zephyrproject
+      revision: v4.5.0
+      import:
+        name-allowlist:
+          - hal_espressif
+          - mbedtls
+          - tf-psa-crypto
+  self:
+    path: Z-Valve

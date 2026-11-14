@@ -1,0 +1,6 @@
+[submodule "RelayBoard/Examples/naldoxable"]
+        path = RelayBoard/Examples/naldoxable
+        url = https://github.com/naldoxable/ES32A08.git
+[submodule "RelayBoard/Examples/makstech"]
+        path = RelayBoard/Examples/makstech
+        url = https://github.com/makstech/esphome-es32a08-expansion-board-example.git

@@ -1,0 +1,43 @@
+#include "common.dtsi"
+
+&valve1 {
+    pwms = <&ledc0 0 PWM_USEC(50) PWM_POLARITY_NORMAL>,
+           <&ledc0 1 PWM_USEC(50) PWM_POLARITY_NORMAL>;
+    enable-gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
+};
+&valve2 {
+    pwms = <&ledc0 2 PWM_USEC(50) PWM_POLARITY_NORMAL>,
+           <&ledc0 3 PWM_USEC(50) PWM_POLARITY_NORMAL>;
+    enable-gpios = <&gpio0 18 GPIO_ACTIVE_HIGH>;
+};
+&valve3 {
+    pwms = <&ledc0 4 PWM_USEC(50) PWM_POLARITY_NORMAL>,
+           <&ledc0 5 PWM_USEC(50) PWM_POLARITY_NORMAL>;
+    enable-gpios = <&gpio0 19 GPIO_ACTIVE_HIGH>;
+};
+&valve4 {
+    pwms = <&ledc0 6 PWM_USEC(50) PWM_POLARITY_NORMAL>,
+           <&ledc0 7 PWM_USEC(50) PWM_POLARITY_NORMAL>;
+    enable-gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
+};
+&pinctrl {
+    valve_pwm: valve_pwm {
+        group1 {
+            pinmux = <LEDC_CH0_GPIO4>, <LEDC_CH1_GPIO5>,
+                     <LEDC_CH2_GPIO6>, <LEDC_CH3_GPIO7>,
+                     <LEDC_CH4_GPIO8>, <LEDC_CH5_GPIO9>,
+                     <LEDC_CH6_GPIO15>, <LEDC_CH7_GPIO16>;
+            output-enable;
+        };
+    };
+};
+&ledc0 {
+    pinctrl-0 = <&valve_pwm>;
+    pinctrl-names = "default";
+};
+&ledc0 {
+    channel4@4 { reg = <4>; timer = <0>; };
+    channel5@5 { reg = <5>; timer = <0>; };
+    channel6@6 { reg = <6>; timer = <0>; };
+    channel7@7 { reg = <7>; timer = <0>; };
+};

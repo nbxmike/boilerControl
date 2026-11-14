@@ -1,0 +1,20 @@
+description: One bidirectional valve and its active-low end stops
+compatible: "valve-controller"
+include: base.yaml
+properties:
+  pwms:
+    type: phandle-array
+    required: true
+    description: RPWM and LPWM for BTS7960, or one RC PWM signal
+  enable-gpios:
+    type: phandle-array
+    description: One output driving both enables of a BTS7960 module
+  open-limit-gpios:
+    type: phandle-array
+    required: true
+  closed-limit-gpios:
+    type: phandle-array
+    required: true
+  open-counterclockwise:
+    type: boolean
+    description: Reverse this valve's logical opening direction

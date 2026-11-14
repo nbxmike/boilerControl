@@ -1,0 +1,17 @@
+# Copy to local.conf (Git-ignored). Use a unique client ID for each device.
+# Select one controller for all four valves:
+# BTS7960: dual-PWM bridge with separate enable (default).
+# VICTOR_SPX: FRC single-signal PWM; TALON_SRX: FRC single-signal PWM.
+# JAGUAR_GREY: Jaguar Grey single-signal PWM.
+# VICTOR_888: Victor 888 single-signal PWM; VICTOR_884: Victor 884 single-signal PWM.
+CONFIG_APP_MOTOR_CONTROLLER="BTS7960"
+CONFIG_APP_WIFI_SSID="your-ssid"
+CONFIG_APP_WIFI_PASSWORD="your-wifi-password"
+CONFIG_APP_MQTT_HOST="192.0.2.1"
+CONFIG_APP_MQTT_PORT=1883
+CONFIG_APP_MQTT_AUTH=n
+# CONFIG_APP_MQTT_AUTH=y
+# CONFIG_APP_MQTT_USERNAME="your-mqtt-user"
+# CONFIG_APP_MQTT_PASSWORD="your-mqtt-password"
+CONFIG_APP_MQTT_CLIENT_ID="heater-valves"
+CONFIG_APP_MQTT_ROOT="heater-valves"
