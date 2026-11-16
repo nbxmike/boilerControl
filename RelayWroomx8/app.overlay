@@ -1,0 +1,51 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/pinctrl/esp32-pinctrl.h>
+
+/ {
+	zephyr,user {
+		relay-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>,
+			      <&gpio1 1 GPIO_ACTIVE_HIGH>,
+			      <&gpio0 25 GPIO_ACTIVE_HIGH>,
+			      <&gpio0 26 GPIO_ACTIVE_HIGH>,
+			      <&gpio0 27 GPIO_ACTIVE_HIGH>,
+			      <&gpio0 14 GPIO_ACTIVE_HIGH>,
+			      <&gpio0 12 GPIO_ACTIVE_HIGH>,
+			      <&gpio0 13 GPIO_ACTIVE_HIGH>;
+		status-led-gpios = <&gpio0 23 GPIO_ACTIVE_HIGH>;
+		/* Reserved only: no MAC/PHY is required or initialized. */
+		t1s-irq-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
+		t1s-reset-gpios = <&gpio0 16 GPIO_ACTIVE_LOW>;
+	};
+};
+
+&gpio0 {
+	/* WROOM has no PSRAM; GPIO16/17 are available on its headers. */
+	gpio-reserved-ranges = <6 6>, <20 1>, <24 1>, <28 4>;
+};
+
+&i2c0 {
+	status = "disabled";
+};
+
+&spi2 {
+	status = "disabled";
+};
+
+&spi3 {
+	status = "disabled";
+	pinctrl-0 = <&t1s_spi_default>;
+	pinctrl-names = "default";
+	cs-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+};
+
+&pinctrl {
+	t1s_spi_default: t1s_spi_default {
+		group1 {
+			pinmux = <SPIM3_MISO_GPIO19>;
+		};
+		group2 {
+			pinmux = <SPIM3_SCLK_GPIO18>, <SPIM3_MOSI_GPIO21>;
+			output-low;
+		};
+	};
+};
