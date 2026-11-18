@@ -13,6 +13,7 @@ wifi_secrets.h
 *.p12
 *.pfx
 secrets/
+/AI Prompt-EPS32 firmware to drive four BTS7960 controllers.docx
 
 # PlatformIO builds and dependencies (may embed credentials)
 .pio/
@@ -39,6 +40,7 @@ TempData/*.jsonl
 *.log
 
 # Machine-specific editor and OS files
+~*
 **/.vscode/c_cpp_properties.json
 **/.vscode/launch.json
 **/.vscode/settings.json
